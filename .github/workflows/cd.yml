@@ -23,9 +23,9 @@ jobs:
               uses: actions/checkout@main
 
             - name: Setup PNPM
-              uses: pnpm/action-setup@latest # 推荐使用最新版本的动作以确保功能更新
+              uses: pnpm/action-setup@v2 # 推荐使用最新版本的动作以确保功能更新
               with:
-                version: 10.x # 设定安装PNPM的10.x版本，x代表该系列的最新小版本
+                version: ^7.0 # 设定安装PNPM的10.x版本，x代表该系列的最新小版本
 
             - name: Setup Node
               uses: actions/setup-node@v3
