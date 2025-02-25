@@ -66,7 +66,7 @@ jobs:
                   username: ${{ secrets.USER_NAME }}
                   password: ${{ secrets.PASSWORD }}
                   port: 22
-                  target: "/www/wwwroot/www.czstudio.tech/" # 服务器目标路径
+                  target: "/www/wwwroot/wq.test/" # 服务器目标路径
 
 
           
