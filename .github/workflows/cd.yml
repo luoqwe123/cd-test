@@ -48,7 +48,7 @@ jobs:
 
             # 回到根目录并安装依赖、打包（如果有需要的话）
             - name: Install dependencies and build in root directory
-              working-directory: /github/workspace
+              working-directory: ''
               run: |
                   pnpm i
                   pnpm build
