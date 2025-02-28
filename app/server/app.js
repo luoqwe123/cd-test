@@ -90,6 +90,10 @@ app.post('/ask',upload.none(), async (req, res) => {
         res.status(500).json({ error: "Failed to process the request." });
     }
 });
+// 设置一个基本的路由
+app.get('/', (req, res) => {
+    res.send('<h1>你好</h1>');
+});
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
