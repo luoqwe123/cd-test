@@ -1,72 +1,70 @@
 name: cd-test
-# 触发workflow的条件
+
 on:
     push:
-        # 只有main分支发生push事件时，才会触发workflow
         branches: [main]
     pull_request:
         branches: [main]
 
-# env:
-#     SERVER_PRIVATE_KEY: ${{ secrets.SERVER_PRIVATE_KEY }} # 服务器私钥
-#     SERVER_HOST: ${{ secrets.SERVER_HOST }} # 服务器IP地址
-#     USER_NAME: ${{ secrets.USER_NAME }} # 服务器用户名
-#     cache-name: note
+env:
+    SERVER_HOST: ${{ secrets.SERVER_HOST }}
+    USER_NAME: ${{ secrets.USER_NAME }}
+    SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }} # 或者使用 SERVER_PRIVATE_KEY，但处理方式会有所不同
 
-# jobs表示执行的一项或多项任务
 jobs:
-    build: # 任务的job_id，具体名称自定义，这里build代表打包
-        runs-on: ubuntu-latest # runs-on字段指定运行所需要的虚拟机环境。注意：这个是必填字段
+    build:
+        runs-on: ubuntu-latest
         steps:
-
             - name: checkout
               uses: actions/checkout@main
 
             - name: Setup PNPM
-              uses: pnpm/action-setup@v2 # 推荐使用最新版本的动作以确保功能更新
+              uses: pnpm/action-setup@v2
               with:
-                version: ^7.0 # 设定安装PNPM的10.x版本，x代表该系列的最新小版本
+                version: ^7.0
 
             - name: Setup Node
               uses: actions/setup-node@v3
               with:
-                node-version: 20.x # 指定安装Node.js的20.x版本，x为兼容的小版本更新
-                cache: "pnpm" #启用缓存以加速后续的运行
+                node-version: 20.x
+                cache: "pnpm"
 
-            # 缓存依赖
-            # - name: Cache nodemodules
-            #   uses: actions/cache@v1
-            #   env:
-            #       cache-name: cache-node-modules
-            #   with:
-            #       # 需要缓存的文件的路径
-            #       path: ./node_modules
-            #       # 对缓存的文件指定的唯一标识
-            #       key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package.json') }}
-            #       # 用于没有再找目标key的缓存的backup选项
-            #       restore-keys: |
-            #           ${{ runner.os }}-build-${{ env.cache-name }}-
-            #           ${{ runner.os }}-build-
-            #           ${{ runner.os }}-
+            # 在 app/server 目录中安装依赖、打包并上传
+            - name: Install dependencies and build in app/server
+              working-directory: app/server
+              run: |
+                  pnpm i
+                 # pnpm build
 
-            # 装依赖
-            - name: Install
-              run: pnpm i 
-
-            # 打包
-            - name: Build Web
-              run: pnpm build
-
-            # 上传打包资源
-            - name: Deploy Web
+            - name: Deploy server
               uses: appleboy/scp-action@master
               with:
                   source: "dist/*"
-                  host: ${{ secrets.SERVER_HOST }}
-                  username: ${{ secrets.USER_NAME }}
-                  password: ${{ secrets.PASSWORD }}
+                  host: ${{ env.SERVER_HOST }}
+                  username: ${{ env.USER_NAME }}
+                  password: ${{ env.SERVER_PASSWORD }}
+                 
                   port: 22
-                  target: "/www/wwwroot/wq.test/" # 服务器目标路径
+                  target: "/www/wwwroot/xq-ai/server/"
+
+            # 回到根目录并安装依赖、打包（如果有需要的话）
+            - name: Install dependencies and build in root directory
+              working-directory: /github/workspace
+              run: |
+                  pnpm i
+                  pnpm build
+
+            - name: Deploy Web
+              uses: appleboy/scp-action@master
+              with:
+                  source: "dist/*" # 注意：这里的 dist 目录应该是根目录下的构建输出目录。
+                  host: ${{ env.SERVER_HOST }}
+                  username: ${{ env.USER_NAME }}
+                  password: ${{ env.SERVER_PASSWORD }}
+                  port: 22
+                  target: "/www/wwwroot/wq-ai/web/"
 
 
           
+# uses: appleboy/scp-action@master 这一行表示 GitHub Actions 工作流将使用 appleboy/scp-action 仓库的 master 分支。这个 action 通常用于通过 SCP（Secure Copy Protocol）协议在远程服务器和 GitHub Actions 运行器之间安全地传输文件。
+# uses: appleboy/ssh-action@master 这一行则表示工作流将使用 appleboy/ssh-action 仓库的 master 分支。这个 action 主要用于通过 SSH（Secure Shell）协议在远程服务器上执行命令。它允许你连接到远程服务器，并在其上运行任意的 shell 命令。
