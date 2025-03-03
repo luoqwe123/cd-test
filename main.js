@@ -17,5 +17,6 @@ function $(el) {
     btn[1].onclick = () => {
         h1.style.color = "black"
     }
+    console.log(import.meta.env.VITE_GLOB_API_URL)
 })()
 
