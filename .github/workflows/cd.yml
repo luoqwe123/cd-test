@@ -61,9 +61,9 @@ jobs:
               # 动态生成 .env 文件
             - name: Create .env file
               run: |
-                echo "OPENAI_API_KEY=${{ secrets.VITE_GLOB_API_URL }}" > .env            
+                echo "VITE_GLOB_API_URL=${{ secrets.VITE_GLOB_API_URL }}" > .env            
               env:
-                OPENAI_API_KEY: ${{ secrets.VITE_GLOB_API_URL }}
+                VITE_GLOB_API_URL: ${{ secrets.VITE_GLOB_API_URL }}
             
              # 构建项目
             - name: Build project
