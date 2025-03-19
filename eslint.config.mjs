@@ -16,7 +16,7 @@ export default [
     rules: {
       indent: ["error", 2], // 缩进 2 个空格
       semi: ["error", "always"], // 强制分号
-      "no-console": ["error"], // 允许 .js 文件中使用 console
+      "no-console": "off", // 允许 .js 文件中使用 console
       "no-require": "off", 
     },
   },

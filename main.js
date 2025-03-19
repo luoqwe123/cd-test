@@ -18,6 +18,6 @@ function $(el) {
     h1.style.color = "black";
   };
   console.log(import.meta.env.VITE_GLOB_API_URL);
-  console.log(111)
+ 
 })();
 

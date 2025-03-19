@@ -16,17 +16,25 @@
   "dependencies": {
     "vite": "^6.2.0"
   },
-   "devDependencies": {
+  "devDependencies": {
     "@eslint/js": "^9.22.0",
     "eslint": "^9.22.0",
     "globals": "^16.0.0",
-    "lint-staged": "^15.5.0"
+    "lint-staged": "^15.5.0",
+    "simple-git-hooks": "^2.11.1"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*.{vue,js,ts,jsx,tsx,md,json}": "eslint --fix"
+    "*.{vue,js,ts,jsx,tsx,md}": "eslint --fix"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "simple-git-hooks"
+    ],
+    "onlyBuiltDependencies": [
+      "simple-git-hooks"
+    ]
   }
- 
 }
